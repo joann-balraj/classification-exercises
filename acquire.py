@@ -48,5 +48,26 @@ def get_iris_data():
     return df
 
 
+def new_telco_data():
+    sql_query = """
+                SELECT * from customers
+                JOIN contract_types using (contract_type_id)
+                JOIN internet_service_types using (internet_service_type_id)
+                JOIN payment_types using (payment_type_id)
+                """
+
+    df = pd.read_sql(sql_query, get_connection('telco_churn'))
+    return df
+
+
 def get_telco_data():
-    
+    if os.path.isfile('telco.csv'):
+        df = pd.read_csv('telco.csv'), index_col = 0)
+    else:
+        df = new_telco_data()
+        df.to_csv('telco.csv')
+    return df
+
+
+import os
+get_telco_data()
