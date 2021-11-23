@@ -34,6 +34,38 @@ def prep_titanic(df):
     df = pd.concat([df, dummy_df], axis = 1)
     return df
 
+def impute_mean_age(train, validate, test):
+    '''
+    This function imputes the mean of the age column for
+    observations with missing values.
+    Returns transformed train, validate, and test df.
+    '''
+    # create the imputer object with mean strategy
+    imputer = SimpleImputer(strategy = 'mean')
+    
+    # fit on and transform age column in train
+    train['age'] = imputer.fit_transform(train[['age']])
+    
+    # transform age column in validate
+    validate['age'] = imputer.transform(validate[['age']])
+    
+    # transform age column in test
+    test['age'] = imputer.transform(test[['age']])
+    
+    return train, validate, test
+
+def split_titanic_data(df):
+    
+    #Combines the clean_titanic_data, split_titanic_data, and impute_mean_age functions.
+    
+    df = prep_titanic(df)
+
+    train, validate, test = split_titanic_data(df)
+    
+    train, validate, test = impute_mean_age(train, validate, test)
+
+    return train, validate, test
+
 
 def prep_telco(df):
     df = df.drop_duplicates()
